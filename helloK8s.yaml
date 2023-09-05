@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-kubernetes-test
+spec:
+  selector:
+      app: hello-kubernetes-test
+  ports:
+    - protocol: 'TCP'
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-kubernetes-test
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes-test
+    spec:
+      containers:
+        - name: hello-kubernetes
+          image: paulbouwer/hello-kubernetes:1.8
+          ports:
+          - connectedPort: 8080
+          env:
+          - name: MESSAGE
+          value: Hello
